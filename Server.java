@@ -1,22 +1,79 @@
 import java.net.*;
-import java.util.Enumeration;
+import java.util.*;
 
 public class Server{
+
+    public class ServerConnection{
+        // The socket for the connection
+        private Socket socket;
+
+        public ServerConnection(Socket socket){
+            this.socket = socket;
+        }
+
+        public void SendString(String string){
+
+        }
+
+        public String RecieveString(){
+            return "";
+        }
+    }
+
+    private class AllowConnections implements Runnable{
+        public void run(){
+            // TODO: Change loop criteria
+            while (true){
+                try{
+                    Socket client = simpleServer.accept();
+                    System.out.print("Connected to" + client.getInetAddress());
+                    listServerConnection.add(new ServerConnection(client));
+                }
+                catch (Exception e){
+                    System.err.println("Error: " + e);
+                }
+            }
+        }
+    }
+
+    // The socket the server operates on
+    public ServerSocket simpleServer;
+
+    // The connections on the server
+    public ArrayList<ServerConnection> listServerConnection;
+
+    // The thread for handleing opening the server
+    private Thread threadOpenServer;
+
     public static void main(String args[]){
         new Server();
     }
 
     public Server(){
+        listServerConnection = new ArrayList<ServerConnection>();
         try{
-            ServerSocket simpleServer = new ServerSocket(0, 1, getLocalHostLANAddress());
+            simpleServer = new ServerSocket(0, 1, getLocalHostLANAddress());
             System.out.println("IP: " + simpleServer.getInetAddress().toString().substring(1) + "\nPort: " + simpleServer.getLocalPort());
+        }
+        catch (Exception e){
+            System.err.println("Error: " + e);
+        }
+    }
 
+    // Opens the server to clients
+    public void Open(){
+        threadOpenServer = new Thread(new AllowConnections());
+        threadOpenServer.start();
+    }
+
+    public void CloseServer(){
+        try{
+            threadOpenServer.join();
             simpleServer.close();
         }
         catch (Exception e){
             System.err.println("Error: " + e);
         }
-
     }
 
 
