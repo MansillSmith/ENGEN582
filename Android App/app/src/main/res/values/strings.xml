@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ENGEN582 Android App</string>
+    <string name="connectTitle">Connect to the server</string>
+    <string name="ipAddressInstruction">IP Address</string>
+    <string name="portInstruction">Port</string>
+    <string name="connectButton">Connect</string>
+    <string name="textBoxStringToSend">String to send</string>
+    <string name="buttonSendString">Send String</string>
+</resources>
