@@ -1,4 +1,6 @@
+import java.io.BufferedInputStream;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Server{
@@ -15,8 +17,21 @@ public class Server{
 
         }
 
-        public String RecieveString(){
-            return "";
+        public String WaitToRecieveString(){
+            try{
+                BufferedInputStream bif = new BufferedInputStream(socket.getInputStream());
+                while(bif.available() != 0){                    
+                        String recievedString = new String(bif.readAllBytes(), StandardCharsets.UTF_8);
+                        bif.close();
+        
+                        return recievedString;
+
+                }
+            }
+            catch(Exception e){
+
+            }
+            return null;
         }
     }
 
@@ -46,7 +61,12 @@ public class Server{
     private Thread threadOpenServer;
 
     public static void main(String args[]){
-        new Server();
+        Server server = new Server();
+        server.Open();
+
+        server.WaitForConnection();
+
+        System.out.println("Received:" + server.listServerConnection.get(0).WaitToRecieveString());
     }
 
     public Server(){
@@ -64,6 +84,17 @@ public class Server{
     public void Open(){
         threadOpenServer = new Thread(new AllowConnections());
         threadOpenServer.start();
+    }
+
+    public void WaitForConnection(){
+        while(this.listServerConnection.size() == 0){
+            try{
+                Thread.sleep(500);
+            }
+            catch(Exception e){
+                
+            }
+        }
     }
 
     public void CloseServer(){
