@@ -1,0 +1,7 @@
+source env/bin/activate
+activates virtual environment
+
+make sure you're on the same network as the light
+
+yeelight API github
+https://github.com/skorokithakis/python-yeelight
